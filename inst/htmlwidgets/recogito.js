@@ -14,13 +14,13 @@ HTMLWidgets.widget({
       renderValue: function(x) {
         el.innerText = x.text;
         r.on('updateAnnotation', function(a) {
-          Shiny.setInputValue(x.inputId, JSON.stringify(r.getAnnotations()));
+          Shiny.setInputValue(x.inputId, JSON.stringify(a));
         });
         r.on('createAnnotation', function(a) {
-          Shiny.setInputValue(x.inputId, JSON.stringify(r.getAnnotations()));
+          Shiny.setInputValue(x.inputId, JSON.stringify(a));
         });
-        r.on('deleteAnnotation', function(annotation) {
-          Shiny.setInputValue(x.inputId, JSON.stringify(r.getAnnotations()));
+        r.on('deleteAnnotation', function(a) {
+          Shiny.setInputValue(x.inputId, JSON.stringify(a));
         });
         r.clearAnnotations();
         if(x.annotations != "{}" & x.annotations != '[""]'){
