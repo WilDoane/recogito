@@ -125,21 +125,43 @@ widget_html.recogitotagsonly <- function(id, style, class, ...){
 #' ##
 #' library(shiny)
 #' library(recogito)
+#'
 #' txt <- "Josh went to the bakery in Brussels.\nWhat an adventure!"
 #' ui <- fluidPage(tags$h3("Provide some text to annotate"),
 #'                 textAreaInput(inputId = "ui_text", label = "Provide some text", value = txt),
 #'                 tags$h3("Annotation area"),
 #'                 recogitotagsonlyOutput(outputId = "annotation_text"),
 #'                 tags$hr(),
-#'                 tags$h3("Results"),
-#'                 verbatimTextOutput(outputId = "annotation_result"))
+#'                 fluidRow(
+#'                   column(3, tags$h3("Create"), verbatimTextOutput(outputId = "create")),
+#'                   column(3, tags$h3("Update"), verbatimTextOutput(outputId = "update")),
+#'                   column(3, tags$h3("Delete"), verbatimTextOutput(outputId = "delete"))
+#'                 ),
+#'                 verbatimTextOutput(outputId = "annotation_result")
+#'                 )
 #' server <- function(input, output) {
 #'   output$annotation_text <- renderRecogitotagsonly({
 #'     recogito("annotations", text = input$ui_text, tags = c("LOCATION", "TIME", "PERSON"))
 #'   })
-#'   output$annotation_result <- renderPrint({
-#'     read_recogito(input$annotations)
+#'
+#'   output$create <- renderPrint({
+#'     tryCatch(prettify(input$annotations_create), error = function(e) {""})
 #'   })
+#'
+#'   output$update <- renderPrint({
+#'       tryCatch(prettify(input$annotations_update), error = function(e) {""})
+#'   })
+#'
+#'   output$delete <- renderPrint({
+#'       tryCatch(prettify(input$annotations_delete), error = function(e) {""})
+#'   })
+#'
+#'   output$annotation_result <- renderPrint({
+#'       req(input$annotations)
+#'       read_recogito(paste0(input$annotations))
+#'   })
+#'
+#'
 #' }
 #' shinyApp(ui, server)
 #'
@@ -148,20 +170,40 @@ widget_html.recogitotagsonly <- function(id, style, class, ...){
 #' ##
 #' library(shiny)
 #' library(recogito)
+#'
 #' txt <- "Josh went to the bakery in Brussels.\nWhat an adventure!"
 #' ui <- fluidPage(tags$h3("Provide some text to annotate"),
 #'                 textAreaInput(inputId = "ui_text", label = "Provide some text", value = txt),
 #'                 tags$h3("Annotation area"),
 #'                 recogitoOutput(outputId = "annotation_text"),
 #'                 tags$hr(),
-#'                 tags$h3("Results"),
-#'                 verbatimTextOutput(outputId = "annotation_result"))
+#'                 fluidRow(
+#'                   column(3, tags$h3("Create"), verbatimTextOutput(outputId = "create")),
+#'                   column(3, tags$h3("Update"), verbatimTextOutput(outputId = "update")),
+#'                   column(3, tags$h3("Delete"), verbatimTextOutput(outputId = "delete"))
+#'                 ),
+#'                 verbatimTextOutput(outputId = "annotation_result")
+#'                 )
 #' server <- function(input, output) {
 #'   output$annotation_text <- renderRecogito({
 #'     recogito("annotations", text = input$ui_text, tags = c("LOCATION", "TIME", "PERSON"))
 #'   })
+#'
+#'   output$create <- renderPrint({
+#'     tryCatch(prettify(input$annotations_create), error = function(e) {""})
+#'   })
+#'
+#'   output$update <- renderPrint({
+#'       tryCatch(prettify(input$annotations_update), error = function(e) {""})
+#'   })
+#'
+#'   output$delete <- renderPrint({
+#'       tryCatch(prettify(input$annotations_delete), error = function(e) {""})
+#'   })
+#'
 #'   output$annotation_result <- renderPrint({
-#'     read_recogito(input$annotations)
+#'       req(input$annotations)
+#'       read_recogito(paste0(input$annotations))
 #'   })
 #' }
 #' shinyApp(ui, server)

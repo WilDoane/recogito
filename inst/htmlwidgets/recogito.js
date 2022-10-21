@@ -14,13 +14,22 @@ HTMLWidgets.widget({
       renderValue: function(x) {
         el.innerText = x.text;
         r.on('updateAnnotation', function(a) {
-          Shiny.setInputValue(x.inputId, JSON.stringify(a));
+          Shiny.setInputValue(x.inputId, JSON.stringify(r.getAnnotations()));
         });
         r.on('createAnnotation', function(a) {
-          Shiny.setInputValue(x.inputId, JSON.stringify(a));
+          Shiny.setInputValue(x.inputId, JSON.stringify(r.getAnnotations()));
         });
         r.on('deleteAnnotation', function(a) {
-          Shiny.setInputValue(x.inputId, JSON.stringify(a));
+          Shiny.setInputValue(x.inputId, JSON.stringify(r.getAnnotations()));
+        });
+        r.on('updateAnnotation', function(a) {
+          Shiny.setInputValue(x.inputId+"_update", "[" + JSON.stringify(a) + "]");
+        });
+        r.on('createAnnotation', function(a) {
+          Shiny.setInputValue(x.inputId+"_create", "[" + JSON.stringify(a) + "]");
+        });
+        r.on('deleteAnnotation', function(a) {
+          Shiny.setInputValue(x.inputId+"_delete", "[" + JSON.stringify(a) + "]");
         });
         r.clearAnnotations();
         if(x.annotations != "{}" & x.annotations != '[""]'){
